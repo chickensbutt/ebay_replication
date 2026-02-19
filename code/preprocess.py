@@ -54,7 +54,7 @@ print(f"Treated DMAs: {treated_dmas}")
 print(f"Untreated DMAs: {untreated_dmas}")
 print(f"Date range: {date_min} to {date_max}")
 
-# Step 4
+# Step  4
 daily_rev = (
 	df.groupby(["date", "search_stays_on"], as_index = False)["revenue"]
 	.mean()
@@ -64,43 +64,53 @@ daily_rev = (
 control_rev = daily_rev[daily_rev["search_stays_on"] == 1]
 treat_rev = daily_rev[daily_rev["search_stays_on"] == 0]
 
-plt.figure()
-plt.plot(control_rev["date"], control_rev["revenue"], label = "Control (search stays on)")
-plt.plot(treat_rev["date"], treat_rev["revenue"], label = "Treatment (search goes off")
-plt.axvline(pd.Timestamp("2012-05-22"), linestyle = "--")
-plt.xlabel("Date")
-plt.ylabel("Revenue")
-plt.title("Average Revenue Over Time: Control vs Treatment")
-plt.legend()
-ax = plt.gca()
-ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=2))
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
-plt.xticks(fontsize=11)
-plt.tight_layout()
-plt.savefig("output/figures/figure_5_2.png", dpi=300)
-plt.close()
+fig, ax = plt.subplots(figsize=(9,3))
+
+ax.plot(control_rev["date"], control_rev["revenue"], linewidth=1.5)
+ax.plot(treat_rev["date"], treat_rev["revenue"], linewidth=1.5)
+
+ax.axvline(pd.Timestamp("2012-05-22"), linestyle="--", linewidth=1)
+
+ax.xaxis.set_major_locator(mdates.MonthLocator())
+ax.xaxis.set_major_formatter(mdates.DateFormatter("%b"))
+
+ax.set_xlabel("")
+ax.set_ylabel("revenue")
+
+ax.text(control_rev["date"].iloc[-1], control_rev["revenue"].iloc[-1],
+	"control\n(search stays on)", va="center", ha="left")
+ax.text(treat_rev["date"].iloc[-1], treat_rev["revenue"].iloc[-1],
+	"treatment\n(search goes off)", va="center", ha="left")
+ax.set_xlim(df["date"].min(), df["date"].max() + pd.Timedelta(days=5))
+
+fig.tight_layout()
+fig.savefig("output/figures/figure_5_2.png", dpi=300)
+plt.close(fig)
 
 # Step 5
-daily_log = (
-	df.groupby(["date", "search_stays_on"], as_index = False)["log_revenue"]
+daily_rev = (
+	df.groupby(["date", "search_stays_on"], as_index=False)["revenue"]
 	.mean()
 	.sort_values("date")
 )
 
+daily_pivot = daily_rev.pivot(
+	index = "date",
+	columns="search_stays_on",
+	values="revenue"
+)
 
-daily_log_pivot = daily_log.pivot(index = "date", columns = "search_stays_on", values = "log_revenue")
+daily_pivot["log_diff"] = np.log(daily_pivot[1]) - np.log(daily_pivot[0])
 
-daily_log_pivot["log_diff"] = daily_log_pivot[1] - daily_log_pivot[0]
+plt.figure(figsize=(9,3))
+plt.plot(daily_pivot.index, daily_pivot["log_diff"], linewidth=1.5)
+plt.axvline(pd.Timestamp("2012-05-22"), linestyle = "--", linewidth=1)
 
-plt.figure()
-plt.plot(daily_log_pivot.index, daily_log_pivot["log_diff"])
-plt.axvline(pd.Timestamp("2022-05-22"), linestyle = "--")
-plt.xlabel("Date")
+plt.xlabel("")
 plt.ylabel("log(rev_control) - log(rev_treat)")
 plt.title("Log Revenue Gap Over Time (Control - Treatment)")
-plt.xlim(daily_log_pivot.index.min(), daily_log_pivot.index.max())
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
-plt.xticks(rotation=45, fontsize=8)
+
 plt.tight_layout()
 plt.savefig("output/figures/figure_5_3.png", dpi=300)
 plt.close()
+
