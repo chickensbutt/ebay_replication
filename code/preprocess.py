@@ -57,7 +57,7 @@ print(f"Date range: {date_min} to {date_max}")
 # Step  4
 daily_rev = (
 	df.groupby(["date", "search_stays_on"], as_index = False)["revenue"]
-	.mean()
+	.sum()
 	.sort_values("date")
 )
 
