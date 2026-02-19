@@ -90,7 +90,7 @@ plt.close(fig)
 # Step 5
 daily_rev = (
 	df.groupby(["date", "search_stays_on"], as_index=False)["revenue"]
-	.mean()
+	.sum()
 	.sort_values("date")
 )
 
@@ -113,4 +113,3 @@ plt.title("Log Revenue Gap Over Time (Control - Treatment)")
 plt.tight_layout()
 plt.savefig("output/figures/figure_5_3.png", dpi=300)
 plt.close()
-
