@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 # Load data
 df = pd.read_csv('input/PaidSearch.csv')
@@ -71,6 +72,7 @@ plt.xlabel("Date")
 plt.ylabel("Revenue")
 plt.title("Average Revenue Over Time: Control vs Treatment")
 plt.legend()
+plt.xticks(fontsize = 0, rotation = 45)
 plt.tight_layout()
 plt.savefig("output/figures/figure_5_2.png", dpi=300)
 plt.close()
@@ -93,6 +95,9 @@ plt.axvline(pd.Timestamp("2022-05-22"), linestyle = "--")
 plt.xlabel("Date")
 plt.ylabel("log(rev_control) - log(rev_treat)")
 plt.title("Log Revenue Gap Over Time (Control - Treatment)")
+plt.xlim(daily_log_pivot.index.min(), daily_log_pivot.index.max())
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+plt.xticks(rotation=45, fontsize=8)
 plt.tight_layout()
 plt.savefig("output/figures/figure_5_3.png", dpi=300)
 plt.close()
