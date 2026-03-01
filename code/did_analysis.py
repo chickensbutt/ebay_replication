@@ -24,6 +24,11 @@ ci = [gam - 1.96*se, gam + 1.96*se]
 gamma_hat = gam
 ci_lower, ci_upper = ci[0], ci[1]
 
+# Exponentiated (levels) results
+gamma_hat_exp = np.exp(gamma_hat)
+ci_lower_exp = np.exp(ci_lower)
+ci_upper_exp = np.exp(ci_upper)
+
 print("Difference-in-Differences Estimate")
 print("----------------------------------")
 print("----------------------------------")
@@ -38,13 +43,13 @@ latex = r"""\begin{table}[h]
 \hline
  & Log Scale \\
 \hline
-Point Estimate ($\hat{\gamma}$) & $%.4f$ \\
-Standard Error & $%.4f$ \\
-95\%% CI & $[%.4f, \; %.4f]$ \\
+Point Estimate ($\hat{\gamma}$) & $%.4f$ & $%.4f$ \\
+Standard Error & $%.4f$ & --- \\
+95\%% CI & $[%.4f, \; %.4f]$ & $[%.4f, \; %.4f]$ \\
 \hline
 \end{tabular}
 \label{tab:did}
-\end{table}""" % (gamma_hat, se, ci_lower, ci_upper)
+\end{table}""" % (gamma_hat, gamma_hat_exp, se, ci_lower, ci_upper, ci_lower_exp, ci_upper_exp)
 
 with open('output/tables/did_table.tex', 'w') as f:
 	f.write(latex)
