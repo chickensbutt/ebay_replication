@@ -1,0 +1,104 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+\title{The Effect of Paid Search Advertising on Revenue: \\
+       A Replication of the eBay Natural Experiment}
+\author{Jai Correa}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+The research question was trying to find the causal effectiveness of 
+paid search ads on eBay's revenue.  
+This matters because while firms spend billions on SEM, measuring its causal
+effect is difficult. A natural experiment is used to answer the question, where
+eBay turned off ads in some markets. 
+
+\section{Experimental Setting}
+
+Blake et al. (2014) convinced eBay to stop bidding on AdWords. They did this
+by doing the following. Firstly, this was not a fully randomized trial --
+the largest DMAs were excluded from treatment, so treatment and control
+groups differ in baseline revenue. Therefore, the paper uses differences-in-difference
+(DID) rather than simple comparison of means. 65 of 210 DMAs were selected
+for treatment starting May 22, 2012. Treatment lasted 8 weeks, with the 
+treatment group having their search turned off, and the control group having
+their search kept on.  
+
+\section{Data and Figures}
+
+The following is daily revenue for 210 DMAs from April to July 2012.
+The variables include date, DMA identifier, treatment period, group,
+and revenue.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.85\textwidth]{../output/figures/figure_5_2.png}
+	\caption{Average revenue for treatment and control DMAs over time.
+		 The dashed line marks May 22, 2012, when SEM was turned off
+		 for the treatment group.}
+	\label{fig:revenue}
+\end{figure}
+
+While both groups show similar weekly oscillation patterns, it is the 
+control group has higher average revenue (the largest DMAs have been
+excluded from treatment). Additionally, it is also hard to see a clear 
+divergence visually at this scale.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.85\textwidth]{../output/figures/figure_5_3.png}
+	\caption{Log-scale average revenue difference between control and treatment
+		 groups over time. The gap appears to increase after May 22.}
+	\label{fig:logdiff}
+\end{figure}
+
+The above figure shows the log ratio of control to treatment revenue.
+The line fluctuates around a stable level before May 22 and appearing to
+increase slightly after. This visual pattern motivates the formal DID test.
+
+\section{Results}
+
+\input{../output/tables/did_table.tex}
+
+The point estimate $\hat{\gamma} = -0.0066$ in log scale.
+In levels, this means it equals $\exp(-0.0066) = 0.9934$, showing treatment DMAs
+lost about 0.66 percent of revenue when paid search was turned off. 
+The 95 percent confidence interval is $[-0.0175, 0.0043]$, including zero,
+implying the effect is not statistically significant at the 5 percent level.
+The economic interpretation would be that turning paid search off had a very
+small (and statistically insignificant) negative effect on revenue. This
+suggests that for a well-known brand like eBay, most users would find the
+site through organic search anyway.
+
+\section{Conclusion}
+
+The DID analysis finds a small, statistically insignificant effect. 
+This replicates the main finding of Blake et al. (2014).
+Limitations of this replication include the following:
+the data is scaled/shifted (not real revenue figures);
+the treatment was not fully randomized; we use a simple DID rather than 
+regression with controls.
+Overall, the result has important implications for marketing ROI measurement.
+
+\begin{thebibliography}{9}
+\bibitem{blake2014}
+Blake, T., C. Nosko, and S. Tadelis (2014).
+``Consumer Heterogeneity and Paid Search Effectiveness: A Large-Scale Field Experiment.''
+\textit{Econometrica}, 83(1): 155--174.
+
+\bibitem{taddy2019}
+Taddy, M. (2019).
+
+\textit{Business Data Science}. McGraw-Hill, Chapter 5.
+\end{thebibliography}
+
+\end{document}
