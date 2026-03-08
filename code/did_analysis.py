@@ -39,7 +39,7 @@ print(f"95% CI: [{ci_lower:.4f}, {ci_upper:.4f}]")
 latex = r"""\begin{table}[h]
 \centering
 \caption{Difference-in-Differences Estimate of the Effect of Paid Search on Revenue}
-\begin{tabular}{lc}
+\begin{tabular}{lcc}
 \hline
  & Log Scale \\
 \hline
